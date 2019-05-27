@@ -1,7 +1,7 @@
 const Employees = require('../models/employee.model.js');
 
 var employeeManager = module.exports = {
-    getAllEmployeesInfo: function (req, res) {
+    getAllEmployeesInfo: function(req, res) {
         Employees.find()
             .then(employees => {
                 for (var i = 0; i < employees.length; i++) {
@@ -16,13 +16,12 @@ var employeeManager = module.exports = {
             });
     },
 
-    getEmployeeInfoBasedOnIdOrName: function (req, res) {
+    getEmployeeInfoBasedOnIdOrName: function(req, res) {
         //since id is of number datatype, we need to convert the search input to int datatype
         var idToSearch = Number.POSITIVE_INFINITY;
         if (Number.isNaN(parseInt(req.params.employeeIdOrName))) {
             idToSearch = Number.POSITIVE_INFINITY; //setting to some random value if the input is not number
-        }
-        else {
+        } else {
             idToSearch = parseInt(req.params.employeeIdOrName);
         }
         var regexSearchTerm = new RegExp(["^", req.params.employeeIdOrName, "$"].join(""), "i");
@@ -42,7 +41,22 @@ var employeeManager = module.exports = {
             });
     },
 
-    createEmployeeInfo: function (req, res) {
+    getEmployeeById: function(req, res) {
+        var query = { 'id': req.params.id };
+        Employees.findOne(query).then(employees => {
+            for (var i = 0; i < employees.length; i++) {
+                var hiredDate = new Date(employees[i].hireDate);
+                //calculating the timeworked in days
+                employees[i].timeWorked = Math.round((new Date() - hiredDate) / (1000 * 60 * 60 * 24));
+            }
+
+            res(null, employees);
+        }).catch(err => {
+            res(err, null);
+        });
+    },
+
+    createEmployeeInfo: function(req, res) {
         if (!req.body) {
             res("Request cannot be empty.", null);
         }
@@ -50,7 +64,10 @@ var employeeManager = module.exports = {
         Employees.find()
             .then(employees => {
                 //getting the max empid from mongodb and incrementing it by 1 to create new empid
-                var newEmpId = parseInt(Math.max.apply(Math, employees.map(function (temp) { return temp.id; }))) + 1;
+                var newEmpId = parseInt(Math.max.apply(Math, employees.map(function(temp) { return temp.id; }))) + 1;
+                if (!newEmpId) {
+                    newEmpId = 1000;
+                }
 
                 //Check if the employee is manager or developer
                 if (req.body.designationId == 3) //if manager
@@ -74,9 +91,8 @@ var employeeManager = module.exports = {
                         }).catch(err => {
                             res(err, null);
                         });
-                }
-                else { //if developer
-                    var resultArr = employees.map(function (temp) { return (temp.id == req.body.managerId && temp.designationId == 3); });
+                } else { //if developer
+                    var resultArr = employees.map(function(temp) { return (temp.id == req.body.managerId && temp.designationId == 3); });
                     if (resultArr.indexOf(true) > -1) { //if manager is valid
                         // Create a employee
                         const employee = new Employees({
@@ -98,8 +114,7 @@ var employeeManager = module.exports = {
                             }).catch(err => {
                                 res(err, null);
                             });
-                    }
-                    else { //if manager is not valid
+                    } else { //if manager is not valid
                         res("Invalid manager id.", null);
                     }
                 }
@@ -108,27 +123,27 @@ var employeeManager = module.exports = {
             });
     },
 
-    updateEmployeeInfo: function (req, res) {
+    updateEmployeeInfo: function(req, res) {
         //forming the filter query to pick data using mongoose
         var query = { 'id': req.body.id };
         req.body.hireDate = new Date(req.body.hireDate); //converting to date obj
 
-        Employees.findOneAndUpdate(query, req.body, { upsert: true }, function (err, doc) {
+        Employees.findOneAndUpdate(query, req.body, { upsert: true }, function(err, doc) {
             if (err) res(err, null);
             else res(null, req.body);
         });
     },
 
-    deleteEmployeeInfo: function (req, res) {
+    deleteEmployeeInfo: function(req, res) {
         //forming the filter query to pick data using mongoose
-        var query = { 'id': req.params.employeeId };
-        Employees.deleteOne(query, function (err, doc) {
+        var query = { 'id': req.params.id };
+        Employees.deleteOne(query, function(err, doc) {
             if (err) res(err, null);
             else res(null, doc);
         });
     },
 
-    getAllManagersInfo: function (req, res) {
+    getAllManagersInfo: function(req, res) {
         Employees.find({ designationId: 3 }) //hardcoding the designationid to 3 as per the enum value set in UI
             .then(employees => {
                 for (var i = 0; i < employees.length; i++) {
