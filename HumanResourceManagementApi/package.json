@@ -1,0 +1,23 @@
+{
+  "name": "human-resource-management-api",
+  "version": "1.0.0",
+  "description": "HR is looking for a api where they can have the list of employees with their personal information.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Express",
+    "RestAPI",
+    "MongoDB",
+    "Mongoose",
+    "HumanResource"
+  ],
+  "author": "Venkat",
+  "license": "OpenSource",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.8"
+  }
+}
