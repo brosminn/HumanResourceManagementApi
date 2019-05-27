@@ -1,0 +1,29 @@
+Mongo DB has to be installed. Follow the steps as per https://www.tutorialspoint.com/mongodb/index.htm
+Download and install RoboMongo from the site https://robomongo.org/download
+Create a database named "HumanResourceDatabase".
+Create a collection named "Employees".
+Create initial documents inside the Employees collection. Sample documents are below.
+For Employee:
+{
+    "id" : 1001,
+    "firstName" : "Venkat",
+    "lastName" : "Natarajan",
+    "designationId" : 1,
+    "managerId" : 1002,
+    "phoneNumber" : "85939814",
+    "email" : "venkatesan.engineer@gmail.com",
+    "hireDate" : "5/24/2018",
+    "imageUrl" : ""
+}
+For Manager:
+{
+    "id" : 1002,
+    "firstName" : "Feroz",
+    "lastName" : "Minnadad",
+    "designationId" : 3,
+    "managerId" : "",
+    "phoneNumber" : "85939814",
+    "email" : "feroz.hms@gmail.com",
+    "hireDate" : "5/24/2018",
+    "imageUrl" : ""
+}
