@@ -5,16 +5,19 @@ module.exports = (app) => {
     app.get('/employees', humanResource.getAllEmployeesInfo);
 
     //Fetch employee info based on id or name
-    app.get('/employees/:employeeIdOrName', humanResource.getEmployeeInfoBasedOnIdOrName);
+    app.get('/employees/search/:employeeIdOrName', humanResource.search);
+
+    //Fetch all employees info
+    app.get('/employees/:id', humanResource.getEmployeeById);
 
     //create employee
-    app.post('/employees/createEmployeeInfo', humanResource.createEmployeeInfo);
+    app.post('/employees', humanResource.createEmployeeInfo);
 
     //Upate employee info
-    app.post('/employees/updateEmployeeInfo', humanResource.updateEmployeeInfo);
+    app.put('/employees', humanResource.updateEmployeeInfo);
 
     //Delete employee info
-    app.delete('/employees/:employeeId', humanResource.deleteEmployeeInfo);
+    app.delete('/employees/:id', humanResource.deleteEmployeeInfo);
 
     //Fetch all managers info
     app.get('/managers', humanResource.getAllManagersInfo);
